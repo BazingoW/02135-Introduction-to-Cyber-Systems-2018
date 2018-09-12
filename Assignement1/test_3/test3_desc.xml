@@ -2,22 +2,31 @@
 
   <statelist>
     <state>INITIALIZE</state>
-    <state>TEST</state>
-    <state>AMINB</state>
-    <state>BMINA</state>
-    <state>FINISH</state>
+    <state>CHECK_PASSWORD</state>
+    <state>CHECK_KEYS</state>
+    <state>LAUNCH</state>
   </statelist>
 
   <initialstate>INITIALIZE</initialstate>
 
   <inputlist>
-    <input>in_A</input>
-    <input>in_B</input>
+    <input>KEY_1</input>
+    <input>KEY_2</input>
+	<input>GUESS_PASSWORD</input>
+	
   </inputlist>
 
   <variablelist>
-    <variable>var_A</variable>
-    <variable>var_B</variable>
+    <variable>HATCH_PASSWORD</variable>
+	<variable>LAUNCH_PASSWORD</variable>
+	<variable>GUESS_LAUNCH_PASSWORD</variable>
+	<variable>GUESS_HATCH_PASSWORD</variable>
+    <variable>KEY = 2</variable>
+	<variable>KEY_COUNTDOWN</variable>
+	<variable>LAUNCH_COUNTDWON</variable>
+	<variable>HATCH_OPEN = 0</variable>
+	<variable>LAUNCH_COUNT</variable>
+	
   </variablelist>
 
   <operationlist>
@@ -58,52 +67,59 @@
     <INITIALIZE>
       <transition>
         <condition>True</condition>
-        <instruction>init_A init_B</instruction>
-        <nextstate>TEST</nextstate>
+        <instruction>NOP</instruction>
+        <nextstate>CHECK_PASSWORD</nextstate>
       </transition>
     </INITIALIZE>
 
-    <TEST>
+    <CHECK_PASSWORD>
       <transition>
-        <condition>A_equal_B</condition>
+        <condition>guess_matches</condition>
         <instruction>NOP</instruction>
-        <nextstate>FINISH</nextstate>
+        <nextstate>CHECK_KEYS</nextstate>
       </transition>
       <transition>
-        <condition>A_greater_B</condition>
+        <condition>no_match</condition>
         <instruction>NOP</instruction>
-        <nextstate>AMINB</nextstate>
+        <nextstate>CHECK_PASSWORD</nextstate>
       </transition>
-      <transition>
-        <condition>B_greater_A</condition>
-        <instruction>NOP</instruction>
-        <nextstate>BMINA</nextstate>
-      </transition>
-    </TEST>
+    </CHECK_PASSWORD>
 
-    <AMINB>
+    <CHECK_KEYS>
       <transition>
-        <condition>True</condition>
-        <instruction>A_minus_B</instruction>
-        <nextstate>TEST</nextstate>
+        <condition>awaiting_key_turn</condition>
+        <instruction>Dec_key_timer</instruction>
+        <nextstate>CHECK_KEYS</nextstate>
       </transition>
-    </AMINB>
-
-    <BMINA>
-      <transition>
-        <condition>True</condition>
-        <instruction>B_minus_A</instruction>
-        <nextstate>TEST</nextstate>
-      </transition>
-    </BMINA>
-
-    <FINISH>
-      <transition>
-        <condition>True</condition>
+	  <transition>
+        <condition>Key_time_over</condition>
         <instruction>NOP</instruction>
-        <nextstate>FINISH</nextstate>
+        <nextstate>CHECK_PASSWORD</nextstate>
       </transition>
-    </FINISH>
+      <transition>
+        <condition>Keys_turned_in_time_hatch_closed</condition>
+        <instruction>OPEN_HATCH</instruction>
+        <nextstate>INITIALIZE</nextstate>
+      </transition>
+	  <transition>
+        <condition>Keys_turned_in_time_hatch_open</condition>
+        <instruction>NOP</instruction>
+        <nextstate>LAUNCH</nextstate>
+      </transition>
+    </CHECK_KEYS>
+
+    <LAUNCH>
+      <transition>
+        <condition>launch_timer_zero</condition>
+        <instruction>LAUNCHCOUNT++,CLOSE_HATCH,LA</instruction>
+        <nextstate>INITIALIZE</nextstate>
+      </transition>
+	  <transition>
+        <condition>timer_not_zero</condition>
+        <instruction>decrease_launch_timer</instruction>
+        <nextstate>LAUNCH</nextstate>
+      </transition>
+    </LAUNCH>
   </fsmd>
 
 </fsmddescription>
