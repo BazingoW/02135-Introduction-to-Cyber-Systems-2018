@@ -237,7 +237,7 @@ print('\n---Start simulation---')
 ######################################
 ######################################
 # Write your code here!
-print (execute_operation("var_A = 10"))
+print(execute_operation("var_A = 10"))
 print(variables["var_A"])
 
 ######################################
