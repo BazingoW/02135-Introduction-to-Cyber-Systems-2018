@@ -1,7 +1,7 @@
 import sys
 import xmltodict
 
-print("Welcome to the FSMD simulator! - Version ?? - Designed by ??")
+print("Welcome to the FSMD simulator! - Version 0.01 - Designed by Benjy")
 
 if len(sys.argv) < 3:
     print('Too few arguments.')
@@ -232,16 +232,46 @@ def merge_dicts(*dict_args):
 cycle = 0
 state = initial_state
 
+repeat = True
+
 print('\n---Start simulation---')
 
-######################################
-######################################
-# Write your code here!
-print (execute_operation("var_A = 10"))
-print(variables["var_A"])
 
-######################################
-######################################
+
+for cycle in range(cycle, iterations):
+    try:
+        if (not (fsmd_stim['fsmdstimulus']['setinput'] is None)):
+            for setinput in fsmd_stim['fsmdstimulus']['setinput']:
+                if type(setinput) is str:
+                    # Only one element
+                    if int(fsmd_stim['fsmdstimulus']['setinput']['cycle']) == cycle:
+                        execute_setinput(fsmd_stim['fsmdstimulus']['setinput']['expression'])
+                    break
+                else:
+                    # More than 1 element
+                    if int(setinput['cycle']) == cycle:
+                        execute_setinput(setinput['expression'])
+    except:
+        pass
+    try:
+        if (not (fsmd_stim['fsmdstimulus']['endstate'] is None)):
+            if state == fsmd_stim['fsmdstimulus']['endstate']:
+                print('End-state reached.')
+                repeat = False
+    except:
+        pass
+    if repeat == False:
+        break
+    print('state =', state)
+    print('cycle =', cycle)
+    print(variables)
+    print(fsmd[state])
+    for item in fsmd[state]:
+        condition = item['condition']
+        check = evaluate_condition(condition)
+        if check:
+            execute_instruction(item['instruction'])
+            state = item['nextstate']
 
 print('\n---End of simulation---')
 
