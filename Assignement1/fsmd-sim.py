@@ -82,6 +82,35 @@ print("Variables:")
 for variable in variables:
     print('  ' + variable)
 
+
+#
+# Description:
+# Support function to merge two dictionaries.
+#
+def merge_dicts(*dict_args):
+    result = {}
+    for dictionary in dict_args:
+        result.update(dictionary)
+    return result
+
+#
+# Description:
+# This function evaluates a Python compatible boolean expressions of
+# conditions passed as string using the conditions defined in the variable 'conditions'
+# and using the operands stored in the dictionaries 'variables' and 'inputs
+# It returns True or False
+#
+def evaluate_condition(condition):
+    if condition == 'True' or condition=='true' or condition == 1:
+        return True
+    if condition == 'False' or condition=='false' or condition == 0:
+        return False
+    condition_explicit = condition
+    for element in conditions:
+        condition_explicit = condition_explicit.replace(element, conditions[element])
+    #print('----' + condition_explicit)
+    return eval(condition_explicit, {'__builtins__': None}, merge_dicts(variables, inputs))
+
 #
 # Description:
 # The 'operations' variable of type 'dictionary' contains the list of all the
@@ -126,7 +155,7 @@ else:
 print("Conditions:")
 for condition in conditions:
     print('  ' + condition + ' : ' + conditions[condition])
-
+    evaluate_condition(condition)
 #
 # Description:
 # The 'fsmd' variable of type 'dictionary' contains the list of dictionaries,
@@ -197,34 +226,8 @@ def execute_instruction(instruction):
     return
 
 
-#
-# Description:
-# This function evaluates a Python compatible boolean expressions of
-# conditions passed as string using the conditions defined in the variable 'conditions'
-# and using the operands stored in the dictionaries 'variables' and 'inputs
-# It returns True or False
-#
-def evaluate_condition(condition):
-    if condition == 'True' or condition=='true' or condition == 1:
-        return True
-    if condition == 'False' or condition=='false' or condition == 0:
-        return False
-    condition_explicit = condition
-    for element in conditions:
-        condition_explicit = condition_explicit.replace(element, conditions[element])
-    #print('----' + condition_explicit)
-    return eval(condition_explicit, {'__builtins__': None}, merge_dicts(variables, inputs))
 
 
-#
-# Description:
-# Support function to merge two dictionaries.
-#
-def merge_dicts(*dict_args):
-    result = {}
-    for dictionary in dict_args:
-        result.update(dictionary)
-    return result
 
 
 #######################################
@@ -265,13 +268,15 @@ for cycle in range(cycle, iterations):
     print('state =', state)
     print('cycle =', cycle)
     print(variables)
-    print(fsmd[state])
+    # print(fsmd[state])
     for item in fsmd[state]:
         condition = item['condition']
         check = evaluate_condition(condition)
         if check:
             execute_instruction(item['instruction'])
             state = item['nextstate']
+            print('state = ', state)
+            break
 
 print('\n---End of simulation---')
 
