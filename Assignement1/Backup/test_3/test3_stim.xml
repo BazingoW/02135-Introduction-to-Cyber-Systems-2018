@@ -1,0 +1,35 @@
+<fsmdstimulus>
+
+  <setinput>
+    <cycle>3</cycle>
+    <expression>GUESS_PASSWORD = &quot;anything&quot;</expression>
+  </setinput>
+  
+  <setinput>
+    <cycle>6</cycle>
+    <expression>GUESS_PASSWORD = &quot;guest&quot;</expression>
+  </setinput>
+ 
+  <setinput>
+    <cycle>7</cycle>
+    <expression>GUESS_PASSWORD = &quot;asdasd&quot;</expression>
+  </setinput>
+  
+   <setinput>
+    <cycle>20</cycle>
+    <expression>GUESS_PASSWORD = &quot;anything&quot;</expression>
+  </setinput>
+
+   <setinput>
+    <cycle>8</cycle>
+    <expression>KEY_1 = 1</expression>
+  </setinput>
+
+  <setinput>
+    <cycle>9</cycle>
+    <expression>KEY_2 = 1</expression>
+  </setinput>
+
+  <endstate>FINISH</endstate>
+
+</fsmdstimulus>

@@ -30,11 +30,11 @@
 
   <operationlist>
     <operation>
-      <name>SET_PASSWORD_HATCH</name>
+      <name>set_password_hatch</name>
       <expression>HATCH_PASSWORD=&quot;guest&quot;</expression>
     </operation>
 	<operation>
-      <name>SET_PASSWORD_LAUNCH</name>
+      <name>set_password_launch</name>
       <expression>LAUNCH_PASSWORD=&quot;anything&quot;</expression>
     </operation>
     <operation>
@@ -46,12 +46,12 @@
       <expression>HATCH_PASSWORD_ACTIVE = True</expression>
     </operation>
     <operation>
-      <name>DECREASE_KEY_TIMER</name>
+      <name>Dec_key_timer</name>
       <expression>KEY_COUNTDOWN = KEY_COUNTDOWN-1</expression>
     </operation>
     <operation>
       <name>OPEN_HATCH</name>
-      <expression>HATCH_OPEN = True</expression>
+      <expression>HATCH_OPEN = 1</expression>
     </operation>
     <operation>
       <name>LAUNCH</name>
@@ -59,7 +59,7 @@
     </operation>
 	<operation>
       <name>CLOSE_HATCH</name>
-      <expression>HATCH_OPEN = False</expression>
+      <expression>HATCH_OPEN = 0</expression>
     </operation>
 	<operation>
       <name>SET_LAUNCH_PASSWORD_FALSE</name>
@@ -78,7 +78,7 @@
       <expression>KEY_COUNTDOWN = 10</expression>
     </operation>
 	<operation>
-      <name>DECREASE_LAUNCH_TIMER</name>
+      <name>decrease_launch_timer</name>
       <expression>LAUNCH_COUNTDOWN = LAUNCH_COUNTDOWN -1</expression>
     </operation>
 	<operation>
@@ -93,39 +93,39 @@
 
   <conditionlist>
     <condition>
-      <name>HATCH_PASSWORD_VALID</name>
+      <name>hatch_password_valid</name>
       <expression>GUESS_PASSWORD == HATCH_PASSWORD</expression>
     </condition>
     <condition>
-      <name>LAUNCH_PASSWORD_VALID</name>
+      <name>launch_password_valid</name>
       <expression>GUESS_PASSWORD == LAUNCH_PASSWORD and HATCH_PASSWORD_ACTIVE == True</expression>
     </condition>
 	<condition>
-      <name>PASSWORDS_INVALID</name>
+      <name>passwords_invalid</name>
       <expression>(GUESS_PASSWORD!=LAUNCH_PASSWORD)and(GUESS_PASSWORD!=HATCH_PASSWORD)</expression>
     </condition>
     <condition>
-      <name>KEYS_WRONG</name>
+      <name>keys_wrong</name>
       <expression>(KEY_1+KEY_2&lt;2)and(KEY_COUNTDOWN &gt; 0)</expression>
     </condition>
 	<condition>
-      <name>KEYS_TURNED_IN_TIME_HATCH_PASSWORD_GOOD</name>
+      <name>keys_turned_in_time_hatch_password_good</name>
       <expression>KEY_1+KEY_2==2 and KEY_COUNTDOWN &gt; 0 and HATCH_PASSWORD_ACTIVE and LAUNCH_PASSWORD_ACTIVE == False</expression>
     </condition>
 	<condition>
-      <name>KEYS_TURNED_IN_TIME_HATCH_OPEN_LAUNCH_PW_GOOD</name>
-      <expression>KEY_1+KEY_2==2 and KEY_COUNTDOWN &gt; 0 and HATCH_PASSWORD_ACTIVE and HATCH_OPEN == True</expression>
+      <name>Keys_turned_in_time_hatch_open_launch_pw_good</name>
+      <expression>KEY_1+KEY_2==2 and KEY_COUNTDOWN &gt; 0 and HATCH_PASSWORD_ACTIVE and HATCH_OPEN == 1</expression>
     </condition>
     <condition>
-      <name>KEYS_NOT_TURNED_IN_TIME</name>
+      <name>keys_not_turned_in_time</name>
       <expression>KEY_COUNTDOWN == 0</expression>
     </condition>
     <condition>
-      <name>LAUNCH_TIMER_ZERO</name>
+      <name>launch_timer_zero</name>
       <expression>LAUNCH_COUNTDOWN == 0</expression>
     </condition>
     <condition>
-      <name>LAUNCH_TIMER_NOT_ZERO</name>
+      <name>timer_not_zero</name>
       <expression>LAUNCH_COUNTDOWN&gt;0</expression>
     </condition>
     <condition>
@@ -138,24 +138,24 @@
     <INITIALIZE>
       <transition>
         <condition>True</condition>
-        <instruction>SET_PASSWORD_HATCH SET_PASSWORD_LAUNCH RESET_TIMER_LAUNCH RESET_TIMER_KEY</instruction>
+        <instruction>set_password_hatch set_password_launch RESET_TIMER_LAUNCH RESET_TIMER_KEY</instruction>
         <nextstate>CHECK_PASSWORD</nextstate>
       </transition>
     </INITIALIZE>
 
     <CHECK_PASSWORD>
       <transition>
-        <condition>HATCH_PASSWORD_VALID</condition>
+        <condition>hatch_password_valid</condition>
         <instruction>REGISTER_PASSWORD_HATCH </instruction>
         <nextstate>CHECK_KEYS</nextstate>
       </transition>
       <transition>
-        <condition>LAUNCH_PASSWORD_VALID</condition>
+        <condition>launch_password_valid</condition>
         <instruction>REGISTER_PASSWORD_LAUNCH</instruction>
         <nextstate>CHECK_KEYS</nextstate>
       </transition>
 	  <transition>
-        <condition>PASSWORDS_INVALID</condition>
+        <condition>passwords_invalid</condition>
         <instruction>NOP</instruction>
         <nextstate>CHECK_PASSWORD</nextstate>
       </transition>
@@ -168,22 +168,22 @@
 
     <CHECK_KEYS>
       <transition>
-        <condition>KEYS_WRONG</condition>
-        <instruction>DECREASE_KEY_TIMER</instruction>
+        <condition>keys_wrong</condition>
+        <instruction>Dec_key_timer</instruction>
         <nextstate>CHECK_KEYS</nextstate>
       </transition>
 	  <transition>
-        <condition>KEYS_NOT_TURNED_IN_TIME</condition>
+        <condition>keys_not_turned_in_time</condition>
         <instruction>RESET_HATCH_PASSWORD RESET_LAUNCH_PASSWORD RESET_TIMER_KEY</instruction>
         <nextstate>CHECK_PASSWORD</nextstate>
       </transition>
       <transition>
-        <condition>KEYS_TURNED_IN_TIME_HATCH_PASSWORD_GOOD</condition>
+        <condition>keys_turned_in_time_hatch_password_good</condition>
         <instruction>OPEN_HATCH</instruction>
         <nextstate>INITIALIZE</nextstate>
       </transition>
 	  <transition>
-        <condition>KEYS_TURNED_IN_TIME_HATCH_OPEN_LAUNCH_PW_GOOD</condition>
+        <condition>Keys_turned_in_time_hatch_open_launch_pw_good</condition>
         <instruction>NOP</instruction>
         <nextstate>LAUNCH</nextstate>
       </transition>
@@ -191,13 +191,13 @@
 
     <LAUNCH>
       <transition>
-        <condition>LAUNCH_TIMER_ZERO</condition>
+        <condition>launch_timer_zero</condition>
         <instruction>LAUNCH CLOSE_HATCH SET_LAUNCH_PASSWORD_FALSE SET_HATCH_PASSWORD_FALSE RESET_TIMER_LAUNCH</instruction>
         <nextstate>INITIALIZE</nextstate>
       </transition>
 	  <transition>
-        <condition>LAUNCH_TIMER_NOT_ZERO</condition>
-        <instruction>DECREASE_LAUNCH_TIMER</instruction>
+        <condition>timer_not_zero</condition>
+        <instruction>decrease_launch_timer</instruction>
         <nextstate>LAUNCH</nextstate>
       </transition>
     </LAUNCH>
