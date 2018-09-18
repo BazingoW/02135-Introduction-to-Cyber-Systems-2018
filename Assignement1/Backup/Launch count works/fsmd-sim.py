@@ -267,8 +267,7 @@ for cycle in range(cycle, iterations):
         break
     print('state =', state)
     print('cycle =', cycle)
-    print('variables =', variables)
-    # print(fsmd[state])
+    print('launch count =',variables["LAUNCH_COUNT"])
     for item in fsmd[state]:
         condition = item['condition']
         check = evaluate_condition(condition)

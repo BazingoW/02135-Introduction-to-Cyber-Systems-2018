@@ -234,7 +234,6 @@ def execute_instruction(instruction):
 # Start to simulate
 cycle = 0
 state = initial_state
-launch_count = variables["LAUNCH_COUNT"]
 
 repeat = True
 
@@ -268,7 +267,7 @@ for cycle in range(cycle, iterations):
         break
     print('state =', state)
     print('cycle =', cycle)
-    print('Launch count =', launch_count)
+    print(fsmd[variables])
     # print(fsmd[state])
     for item in fsmd[state]:
         condition = item['condition']
