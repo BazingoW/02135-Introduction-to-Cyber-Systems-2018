@@ -1,7 +1,7 @@
 import sys
 import xmltodict
 
-print("Welcome to the FSMD simulator! - Version 0.01 - Designed by Benjy")
+print("Welcome to the FSMD simulator! - Version 1.0 - Designed by Joao and Benjy")
 
 if len(sys.argv) < 3:
     print('Too few arguments.')
