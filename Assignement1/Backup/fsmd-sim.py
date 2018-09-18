@@ -267,7 +267,7 @@ for cycle in range(cycle, iterations):
         break
     print('state =', state)
     print('cycle =', cycle)
-    print('variables =', variables)
+    print(fsmd[variables])
     # print(fsmd[state])
     for item in fsmd[state]:
         condition = item['condition']
