@@ -360,18 +360,26 @@ def storeData(R1, R2, R3):
 def jump(R1, R2, R3):
     a = registerFile.read_register(R1)
     program_counter = a
+    return program_counter
 
 def jumpequal(R1, R2, R3):
     a = registerFile.read_register(R2)
     b = registerFile.read_register(R3)
     if a == b:
-        jump(R1, R2, R3)
+        program_counter = jump(R1, R2, R3)
+        return program_counter
+    else:
+        return "no"
 
 def jumplessthan(R1, R2, R3):
     a = registerFile.read_register(R2)
     b = registerFile.read_register(R3)
     if a < b:
-        jump(R1, R2, R3)
+        program_counter = jump(R1, R2, R3)
+        return program_counter
+    else:
+        return "no"
+
 
 def donothing(R1, R2, R3):
     return
@@ -403,7 +411,22 @@ while current_cycle < max_cycles:
     for operation in operationDict:
         if operation == opcode:
             operationDict[operation](operand_1, operand_2, operand_3)
-    program_counter = program_counter+1
+    if opcode == ("JR"):
+        program_counter = jump(operand_1,operand_2,operand_3)
+    elif opcode == ("JEQ"):
+        resultJEQ = jumpequal(operand_1,operand_2,operand_3)
+        if resultJEQ != "no":
+            program_counter = resultJEQ
+        else:
+            program_counter = program_counter +1
+    elif opcode ==  ("JLT"):
+        resultJLT = jumplessthan(operand_1,operand_2,operand_3)
+        if resultJLT != "no":
+            program_counter = resultJLT
+        else:
+            program_counter = program_counter +1
+    else:
+        program_counter = program_counter + 1
     current_cycle = current_cycle+1
 
 
