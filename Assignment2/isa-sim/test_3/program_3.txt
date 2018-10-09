@@ -1,0 +1,23 @@
+# Copy the array from source (0-9) to destination (10-19)
+0: LD R1, 0;  # R1 is the read pointer
+1: LD R2, R1; # Loading first element
+2: LI R3, 1;  # How much we are incrementing each time
+3: LI R7, 20; # address of setting new maximum
+4: LI R8, 7;  # come back address
+5: LI R9, 22;  # ENDING ADDRESS
+6: LI R10, 5;  # Number of elements
+#starts the loop
+7: ADD R4, R4, R3;  # R4 is the counter that is incremented
+8: JEQ R9, R5, R10;  # R4 is the counter that is incremented
+9: LD R5 , R4;  # Loading element from memory into register 5
+10: JLT R7, R2, R5;  # Done copy address
+11: JR R8;
+
+
+
+# new round:
+20: LD R2, R5; # setting new maximum
+21: JR R8; # jumps back
+
+
+22: END
