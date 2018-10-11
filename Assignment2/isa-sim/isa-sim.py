@@ -309,9 +309,10 @@ instructionMemory = InstructionMemory()
 
 print('\n---Start of simulation---')
 
-on = 1
 
 
+#Setting all functions
+#They all take in 3 registers as arguments
 
 def addition(R1, R2, R3):
     a = registerFile.read_register(R2)
@@ -369,7 +370,7 @@ def jumpequal(R1, R2, R3):
         program_counter = jump(R1, R2, R3)
         return program_counter
     else:
-        return None
+        return None #used to see whether or not a jump should be executed
 
 def jumplessthan(R1, R2, R3):
     a = registerFile.read_register(R2)
@@ -378,7 +379,7 @@ def jumplessthan(R1, R2, R3):
         program_counter = jump(R1, R2, R3)
         return program_counter
     else:
-        return None
+        return None #used to see whether or not a jump should be executed
 
 
 def donothing(R1, R2, R3):
@@ -390,11 +391,21 @@ def end(R1, R2, R3):
     dataMemory.print_used()
     quit()
 
-operationDict = {"ADD": addition, "SUB":subtraction, "OR":bitOR, "AND":bitAnd, "NOT":bitNot, "LI": loadImmediate, "LD":loadData, "SD": storeData, "JR": jump, "JEQ":jumpequal, "JLT":jumplessthan, "NOP": donothing, "END":end}
+operationDict = {"ADD": addition,\
+                 "SUB":subtraction,\
+                 "OR":bitOR,\
+                 "AND":bitAnd,\
+                 "NOT":bitNot,\
+                 "LI": loadImmediate,\
+                 "LD":loadData,\
+                 "SD": storeData,\
+                 "JR": jump,\
+                 "JEQ":jumpequal,\
+                 "JLT":jumplessthan,\
+                 "NOP": donothing,\
+                 "END":end}
 
-
-
-
+#operationDict allows us to store all the functions so that they are easily searcheable by their opcodes
 
 
 
@@ -408,19 +419,22 @@ while current_cycle < max_cycles:
     print("Current cycle:", current_cycle)
     print("Current operation:", opcode)
     print("Register values:", registerFile.print_all())
-    print("Data Memory", dataMemory.print_all())
 
+
+#Checks the operation to be executed with the program counter
 
     for operation in operationDict:
-        if operation == opcode:
-            returned_value = operationDict[operation](operand_1, operand_2, operand_3)
-            if returned_value == None:
+        if operation == opcode: #compares opcode of program counter to operations in operationDict
+            returned_value = operationDict[operation](operand_1, operand_2, operand_3) #Executes the operation of the operation dict and stores the returned value (to deal with jumps)
+            if returned_value == None: #If there's no jump then the program counter increments by one
                 program_counter = program_counter +1
             else:
-                program_counter = returned_value
+                program_counter = returned_value #If there is a jump, the program counter is set to the program counter determined by the jump
+            break # exits after finding first matching opcode for performance
 
     current_cycle = current_cycle+1
 
+print("Data Memory", dataMemory.print_used()) #prints the data memory that was used at the end of the program
 
 
 
