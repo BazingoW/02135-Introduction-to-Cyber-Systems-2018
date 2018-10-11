@@ -6,18 +6,51 @@
 4: LI R8, 7;  # come back address
 5: LI R9, 22;  # ENDING ADDRESS
 6: LI R10, 5;  # Number of elements
+7: LI R11 255;
+8: LI R12 50;
+9: LI R13 12;
+10: LD R14, R2;
 #starts the loop
-7: ADD R4, R4, R3;  # R4 is the counter that is incremented
-8: JEQ R9, R5, R10;  # R4 is the counter that is incremented
-9: LD R5 , R4;  # Loading element from memory into register 5
-10: JLT R7, R2, R5;  # Done copy address
-11: JR R8;
+11: ADD R4, R4, R3;  # R4 is the counter that is incremented
+12: JEQ R9, R4, R10;  # R4 is the counter that is incremented
+13: LD R5 , R4;  # Loading element from memory into register 5
+14: JLT R7, R2, R5;  # Done copy address
+15: ADD R14, R14, R5;
+16: JLT R12, R5, R11;
+17: JR R8;
 
 
 
-# new round:
-20: LD R2, R5; # setting new maximum
-21: JR R8; # jumps back
+# max:
+20: ADD R2, R5, R0; # setting new maximum
+21: JR R13; # jumps back
 
 
-22: END
+# min
+50: ADD R11, R5, R0;
+51: JR R8;
+
+
+
+53: LI R15, 250;
+54: SD R2, R15;
+
+55: LI R15, 251;
+56: SD R11, R15;
+
+57: LI R15 249;
+58: SD R14, R15;
+
+#average
+
+59: LI R2, 62;
+60: LI R1, 100;
+61: LI R4, 0;
+62: SUB R7, R14, R10;
+63: JLT R1, R7, R10;
+64: ADD R4, R4, R3;
+65: JR R2;
+
+100: LI R15 5;
+101: SD R4, R15;
+102: END
