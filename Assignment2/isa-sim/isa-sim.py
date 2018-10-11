@@ -404,9 +404,12 @@ while current_cycle < max_cycles:
     operand_2 = instructionMemory.read_operand_2(program_counter)
     operand_3 = instructionMemory.read_operand_3(program_counter)
 
+    print("Program Counter:", program_counter)
     print("Current cycle:", current_cycle)
     print("Current operation:", opcode)
-    print("Program Counter:", program_counter)
+    print("Register values:", registerFile.print_all())
+    print("Data Memory", dataMemory.print_all())
+
 
     for operation in operationDict:
         if operation == opcode:
