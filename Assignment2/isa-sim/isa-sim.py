@@ -388,7 +388,7 @@ def donothing(R1, R2, R3):
 
 def end(R1, R2, R3):
     registerFile.print_all()
-    dataMemory.print_used()
+    dataMemory.print_used()  #prints the data memory that was used at the end of the program
     quit()
 
 operationDict = {"ADD": addition,\
@@ -434,7 +434,7 @@ while current_cycle < max_cycles:
 
     current_cycle = current_cycle+1
 
-print("Data Memory", dataMemory.print_used()) #prints the data memory that was used at the end of the program
+
 
 
 
