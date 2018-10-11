@@ -1,8 +1,12 @@
 # The initial content of the data memory
 # The format is: <data mem. address>: <memory value>;
-# All numbers are decimal 
+# All numbers are decimal
 0: 2;
 1: 4;
 2: 10;
 3: 1;
+<<<<<<< HEAD
+4: 239;
+=======
 4: 20;
+>>>>>>> b11d539f4188548b11f1a4df367787a6b28d045b
