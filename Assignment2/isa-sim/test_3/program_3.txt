@@ -1,56 +1,84 @@
+#Description of Registers:
+#R0 unused, always 0
+#R1: Pointing to instruction memory address for saving the average in the end
+#R2: Used to store current maximum value at beginning
+#R2: R2 points to the instruction memory address of the start of the average calculation loop
+#R3: 1 always
+#R4: incrementer variable used for the min/max loop and finding the average
+#R5: minimum or maximum candidate (used to compare against current max/min)
+#R6: Unused
+#R7: Points to the instruction memory address for the setting the maximum
+#R8: Points to the instruction memory address of min/max loop
+#R9: Points to the instruction memory address for storing the maximum and min
+#R10: Number of elements (for this example is 5)
+#R11: Stores the minimum value
+#R12: Points to the instruction memory address where the minimum value is stored
+#R13: Points to a instruction memory address inside the max/min loop
+#R14: Used to store the sum of the values in the data memory - used to calculate the average afterwards - and is the remainder in the end
+#R15: Points to the data memory address to which we want to store the max/min/average/accumulator
+
+
+
 # Copy the array from source (0-9) to destination (10-19)
-0: LI R1, 0;  # R1 is the read pointer
-1: LD R2, R1; # Loading first element
-2: LI R3, 1;  # How much we are incrementing each time
-3: LI R7, 20; # address of setting new maximum
-4: LI R8, 7;  # come back address
-5: LI R9, 22;  # ENDING ADDRESS
-6: LI R10, 5;  # Number of elements
-7: LI R11 255;
-8: LI R12 50;
-9: LI R13 12;
-10: LD R14, R2;
-#starts the loop
+0: NOP;  # Taking it easy
+1: LD R2, R1; # Loading first element from data memory as current max
+2: LI R3, 1;  # Setting the incrementing amount
+3: LI R7, 20; # address of set max function
+4: LI R8, 11;  # Setting the address of the min/max loop
+5: LI R9, 53;  # Setting the address to store data
+6: LI R10, 5;  # Number of elements in array
+7: LD R11 R0;	# Loading first element from data memory as current min
+8: LI R12 50;	# Setting the min function address
+9: LI R13 15;	# Address after returning from max function
+10: LD R14, R0;	# Loading first element from data memory as the sum
+
+#min max loop
 11: ADD R4, R4, R3;  # R4 is the counter that is incremented
-12: JEQ R9, R4, R10;  # R4 is the counter that is incremented
+12: JEQ R9, R4, R10;  #checks if there are any more elements in the array
 13: LD R5 , R4;  # Loading element from memory into register 5
-14: JLT R7, R2, R5;  # Done copy address
-15: ADD R14, R14, R5;
-16: JLT R12, R5, R11;
-17: JR R8;
+14: JLT R7, R2, R5;  # checks if current value is larger than max, if so, jumps to set max
+15: ADD R14, R14, R5; #accumulator
+16: JLT R12, R5, R11; #checks if current value is smaller than min, if so, jumps to set min
+17: JR R8; #Jumps back to beginning of min max loop
 
 
 
-# max:
+# set max function:
 20: ADD R2, R5, R0; # setting new maximum
-21: JR R13; # jumps back
+21: JR R13; # jumps back to to the accumulator (in the middle of the min max loop
 
 
-# min
-50: ADD R11, R5, R0;
-51: JR R8;
+# set min function:
+50: ADD R11, R5, R0; # setting the new minimum
+51: JR R8; #Jumps back to beginning of min max loop
+51: JR R8; #Jumps back to beginning of min max loop
 
 
-
-53: LI R15, 250;
+#Store maximum value
+53: LI R15, 250; 
 54: SD R2, R15;
 
+#Store minimum value
 55: LI R15, 251;
 56: SD R11, R15;
 
+#Store sum
 57: LI R15 249;
 58: SD R14, R15;
 
-#average
+#Findig the average
 
-59: LI R2, 62;
-60: LI R1, 100;
-61: LI R4, 0;
-62: SUB R7, R14, R10;
-63: JLT R1, R7, R10;
-64: ADD R4, R4, R3;
-65: JR R2;
+59: LI R2, 62; #setting the pointer to the beginning of the average function
+60: LI R1, 100; #setting the pointer to storing average and ending program
+61: LI R4, 0; #Resetting R4 as counter
 
-100: LI R15 5;
-101: SD R4, R15;
+#average function:
+62: SUB R14, R14, R10; # subtracting number of elements from sum
+63: ADD R4, R4, R3; # incrementing the counter
+64: JLT R1, R14, R10; #checking if remainder is less than number of elements, if so, jumps to store and end of program
+65: JR R2; # Jumps to to beginning of average function
+
+#storing average and ending program
+100: LI R15 252; # setting address to store average
+101: SD R4, R15; # storing average
 102: END
