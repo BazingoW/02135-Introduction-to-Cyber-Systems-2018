@@ -1,5 +1,5 @@
 # Copy the array from source (0-9) to destination (10-19)
-0: LD R1, 0;  # R1 is the read pointer
+0: LI R1, 0;  # R1 is the read pointer
 1: LD R2, R1; # Loading first element
 2: LI R3, 1;  # How much we are incrementing each time
 3: LI R7, 20; # address of setting new maximum
