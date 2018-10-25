@@ -1,0 +1,32 @@
+
+    """
+#    print(pingreen.value())
+    if button.value() == 1:
+        if pingreen.value() == 1:
+            pingreen.value(0)
+            pinyellow.value(1)
+        if pinyellow.value() == 1:
+            pinyellow.value(0)
+            pinred.value(1)
+        if pinred.value() == 1:
+            pinred.value(0)
+            pingreen.value(1)
+
+        """
+        """
+        if buttoncounter%3 == 0:
+            pinred.value(0)
+            pingreen.value(1)
+            buttoncounter ++
+
+        if buttoncounter%3 == 1:
+            pingreen.value(0)
+            pinyellow.value(1)
+            buttoncounter ++
+
+        if buttoncounter%3 == 2:
+            pinyellow.value(0)
+            pinred.value(1)
+            buttoncounter ++
+
+"""

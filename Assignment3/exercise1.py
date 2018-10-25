@@ -1,5 +1,9 @@
 #blink code
 
+#Exercise 1
+
+import machine
+import time
 pin = machine.Pin(12, machine.Pin.OUT)
 
 for i in range(10):
@@ -7,3 +11,10 @@ for i in range(10):
     time.sleep(0.5)
     pin.value(0)
     time.sleep(0.5)
+
+
+
+
+
+
+
