@@ -5,9 +5,6 @@ pinyellow = machine.Pin(27, machine.Pin.OUT)
 pingreen = machine.Pin(33, machine.Pin.OUT)
 button = machine.Pin(15, machine.Pin.IN)
 
-print("heelo")
-
-
 
 buttoncounter = 0
 pingreen.value(1)
