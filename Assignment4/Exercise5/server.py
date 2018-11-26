@@ -2,6 +2,7 @@ import machine #imports machine library
 import network #imports network library
 import socket #imports socket library
 import json
+import neopixel
 
 ap = network.WLAN (network.AP_IF) #Sets up an access point that allows other WiFi clients to connect to it
 ap.active (True) #Sets the access point to active
@@ -11,6 +12,18 @@ ap.config (authmode = 3, password = 'WiFi-password') #Setting the access point e
 
 #Setting up pins as a variable that fetches all the inputs (the value read from the pin/whether it is on or off) of the listed pins, and saving them in a list
 pins = [machine.Pin(i, machine.Pin.IN) for i in ([15])]
+leds = [machine.Pin(i, machine.Pin.OUT) for i in ([12,27,33])]
+#12 red
+#27 yellow
+#33 green
+
+
+np = neopixel.NeoPixel(machine.Pin(14), 8)
+
+np[0] = (0,0,0) # Red
+np[1] = (0,0,0) #Yellow
+np[2] = (0,0,0)   #Green
+
 
 #html description
 
@@ -22,7 +35,7 @@ pins = [machine.Pin(i, machine.Pin.IN) for i in ([15])]
 #Inside the body, the <h1> tag demarcates a header inside the body
 #Creating a table with the name of the Pins in one column and the value of the corresponding pin in an adjacent column
 #All tags are closed with the corresponding </> tags
-html = """<!DOCTYPE html> 
+html ="HTTP/1.1 200 OK\n\n"+"""<!DOCTYPE html> 
 <html>
     <head> <title>ESP32 Pins</title> </head>
     <body> <h1>ESP32 Pins</h1>
@@ -64,6 +77,10 @@ res_reg = 8
 sensor = "Temperature"
 sensorsdict = {"Temperature":12,"Testsensor":1123123}
 
+def pinfinder(string,pinlist):
+    for pin in pinlist:
+        if str(pin) == string:
+            return pin
 
 def temp_c(data):
     value = data[0] << 8 | data[1]
@@ -109,6 +126,26 @@ def inputinterpret(line, pins, sensorsdict):
         sensdumped = json.dumps(sensdict)
         return str(sensdumped)
 
+    if "/setnp" in line:
+        stringline = line.decode("utf-8")
+        stringlist = stringline.split("/")
+        print("This is string list", stringlist)
+        number = int(stringlist[2])
+        green = int(stringlist[3])
+        red = int(stringlist[4])
+        blue = int(stringlist[5])
+        np[number] = (green, red, blue)
+        np.write()
+
+    elif "/set" in line:
+        stringline = line.decode("utf-8")
+        stringlist = stringline.split('/')
+        pinstring = stringlist[2]
+        pin = pinfinder(pinstring,leds)
+        value = int(stringlist[3])
+        pin.value(value)
+        
+
 responsechange = None
 
 while True:
@@ -119,10 +156,11 @@ while True:
     cl_file = cl.makefile('rwb', 0)
     while True:
         line = cl_file.readline()
-        responsechange = inputinterpret(line, pins, sensorsdict)
+        if "GET" in line:
+            responsechange = inputinterpret(line, pins, sensorsdict)
         if responsechange != None:
             response = "HTTP/1.1 200 OK\n\n" + responsechange
-        print(str(response))
+        #print(str(response))
         #print(line)
         if not line or line == b'\r\n':
             break
